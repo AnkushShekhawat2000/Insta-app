@@ -1,41 +1,180 @@
-import React, { useState } from "react"
-import axios from "axios"
+// import React, { useState, useEffect, useContext } from "react"
+// import axios from "axios"
+// import UserContext from "../Context/UserContext";
+// import { useNavigate } from "react-router-dom";
 
 
-const Dashboard =({token})=>{
 
-    const [message, setMessage] = useState("");
+// const Dashboard =()=>{
 
- 
+//     const [message, setMessage] = useState("");
+//     const [name, setName] = useState("");
+
+//    const {token, setToken} = useContext(UserContext);
+
+//    const navigate = useNavigate();
+
+//    useEffect(()=>{
+//     token && getJoke();
+//    },[token])
+
+//    useEffect(()=>{
+//     if(!token){
+//         let jsonToken = localStorage.getItem("token")
+//         if(!jsonToken){
+//             navigate("/login")
+//         }
+//         else{
+//             setToken(JSON.parse(jsonToken))
+//         }
+//     }
+//    },[])
+
+   
+
+//    async function getJoke(){
+//          try{
+//             const response = await axios.get("https://instagram-express-app.vercel.app/api/auth/zuku",
+//             {
+//                 headers:{
+//                     authorization : `Bearer ${token}`
+//                 }
+//             })
+//             // console.log("dashboard")
+
+//             setMessage(response.data.data.message)
+//             setName(response.data.data.user.name);
+//          }
+//          catch(err){
+
+//             console.log("fail ho gya",err)
+// //
+
+
+//          }
+
+//     }
+
+//     async function logout(){
+//         try{
+//             const response = await axios.delete("https://instagram-express-app.vercel.app/api/auth/logout",
+//             {
+//                 headers:{
+//                     authorization : `Bearer ${token}`
+//                 }
+//             })
+//             setToken("");
+//             setName("");
+//             setMessage("");
+//             alert("Logout Successfully");
+//             // navigate("/login")
+//         }
+//         catch(err){
+//             console.log(err);
+//         }
+//     }
+
+//     return (
+//         <div>
+//              <div className="logout">
+//                <button onClick={logout}>Logout</button>
+//              </div>
+//             <h1>Welcome {name}</h1>
+//             {
+//                 message && <h2>{message}</h2>
+//             }
+            
+//         </div>
+//     )
+// }
+
+// export default Dashboard;
+
+
+
+// // logout api
+
+
+
+
+
+import React,{useState, useEffect, useContext} from "react"; 
+import axios from "axios";
+import UserContext from "../Context/UserContext";
+import {useNavigate} from "react-router-dom";
+
+
+
+const Dashboard = () => {
+    const [message, setMessage] = useState("")
+    const [name, setName] = useState("")
+    const {token,setToken} = useContext(UserContext);
+
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+       token && getJoke();
+    },[token])
+
+    useEffect(()=>{
+      if(!token){
+       let jsonToken =   localStorage.getItem("token")
+       console.log(jsonToken)
+       if(!jsonToken){
+              navigate("/login")
+       }
+      else{
+          setToken(JSON.parse(jsonToken))
+        }
+
+      }
+    },[])
+
+
    async function getJoke(){
          try{
-            const response = await axios.get("https://instagram-express-app.vercel.app/api/auth/zuku",
-            {
-                headers:{
+             const response = await axios.get("https://instagram-express-app.vercel.app/api/auth/zuku",{
+                 headers:{
                     authorization : `Bearer ${token}`
-                }
-            })
-            // console.log("dashboard")
-
-            setMessage(response.data.data.message)
+                 }
+             })
+             setMessage(response.data.data.message)
+             setName(response.data.data.user.name)
          }
-         catch(err){
-
-            // console.log("fail ho gya",err)
-//
-
-
-         }
-
+        catch(err){
+                console.log(err)
+        }
     }
 
-    return (
+   async function logout(){
+         try{
+            const response = await axios.delete("https://instagram-express-app.vercel.app/api/auth/logout",{
+                headers:{
+                    authorization : `Bearer ${token}`
+                 }
+            })
+            setToken("")
+            setName("")
+            setMessage("")
+            alert("Logout Successful")
+            navigate("/login")
+
+         }
+         catch(err){
+             console.log(err)
+         }
+    }
+
+    return(
         <div>
-            <h1>Dashboard</h1>
+            <div className="logout">
+                <button onClick={logout}>Logout</button>
+            </div>
+            <h1>Welcome {name}</h1>
             {
-                message && <h2>{message}</h2>
+                message && <p>{message}</p>
             }
-            <button onClick={getJoke}>Get Job</button>
+            
         </div>
     )
 }
@@ -43,5 +182,4 @@ const Dashboard =({token})=>{
 export default Dashboard;
 
 
-
-// logout api
+//logout

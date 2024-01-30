@@ -87,22 +87,27 @@
 
 
 
-import React,{useState} from "react";
+import React,{useState,useContext} from "react";
 import axios from "axios";
+import UserContext from "../Context/UserContext";
+import {useNavigate} from "react-router-dom";
 
-const Signup = ({setToken}) => {
+
+
+const Signup = () => {
     const [user, setUser] = useState({
         name:"",
         email:"",
         password:"",
         confirmPassword:""
     });
+    const {setToken} = useContext(UserContext);
+
+    const navigate = useNavigate();
 
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
 
-   
-    
     const {name, email, password, confirmPassword} = user;
 
 
@@ -128,19 +133,21 @@ const Signup = ({setToken}) => {
                 "email": email,
                 "password": password,
             })
-            console.log("sucess", response)
             console.log("Success", response.data)
             setSuccessMessage(response.data.message)
-            setToken();
             setToken(response.data.data.token)
+            // saving token in local storage: 
+            localStorage.setItem("token", JSON.stringify(response.data.data.token))
             setErrorMessage("")
             setUser({
                 name:"",
                 email:"",
                 password:"",
                 confirmPassword:""
-
+            
             })
+            alert("Signup Successful")
+            navigate("/dashboard")
 
         }
 
@@ -149,7 +156,7 @@ const Signup = ({setToken}) => {
             setErrorMessage(err.response.data.message)
             setSuccessMessage("")
         }
-
+        
     }
 
     return(
@@ -181,7 +188,7 @@ const Signup = ({setToken}) => {
                   />
                     <button type="submit">Submit</button>
               </form>
-              <hr />
+              
         </div>
     )
 }
